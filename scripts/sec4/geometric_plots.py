@@ -33,7 +33,7 @@ if __name__ == "__main__":
         discount_factors[2]: batch_sizes_by_game[0][3],
     }
 
-    (mt_regret, st_regret, benchmark_payoffs, ssgs) = np.load(regret_path, allow_pickle=True).tolist()
+    (mt_regret, st_regret, benchmark_payoffs, ssgs) = np.load(regret_path, allow_pickle=True)
 
 
     # main plot (first game)
@@ -49,21 +49,21 @@ if __name__ == "__main__":
         for batch_size in batch_sizes_by_game[0]:
             y_st_table[batch_size] = [st_regret[(0,gamma,T,batch_size)] for T in time_horizons]
         
-        axes[0][j].plot(x,y_mt,"-*",label="Multi-Threaded Clinch")
+        axes[j].plot(x,y_mt,"-*",label="Multi-Threaded Clinch")
         
-        for (k,batch_size) in enumerate(batch_sizes_by_game[i]):
-            axes[0][j].plot(x,y_st_table[batch_size],label=f"Batched Clinch (B={batch_size})")
-        axes[0][j].plot(x,y_null,"--",label="Null strategy (B=T)")
-        axes[0][j].set_xlabel("Time horizon (T)")
+        for (k,batch_size) in enumerate(batch_sizes_by_game[0]):
+            axes[j].plot(x,y_st_table[batch_size],label=f"Batched Clinch (B={batch_size})")
+        axes[j].plot(x,y_null,"--",label="Null strategy (B=T)")
+        axes[j].set_xlabel("Time horizon (T)")
         if j == 0:
-            axes[0][j].set_ylabel("Regret")
-        axes[0][j].set_ylim([0,y_lim_list[0]])
-        axes[0][j].set_title(f"γ = {gamma}, B* = {B_star_by_discount_factor[gamma]}")
+            axes[j].set_ylabel("Regret")
+        axes[j].set_ylim([0,y_lim_list[0]])
+        axes[j].set_title(f"γ = {gamma}, B* = {B_star_by_discount_factor[gamma]}")
         if j == 0:
-            handles, labels = axes[0][j].get_legend_handles_labels()
+            handles, labels = axes[j].get_legend_handles_labels()
     
-    axes[0][-1].set_axis_off()
-    axes[0][-1].legend(handles, labels, loc='right')
+    axes[-1].set_axis_off()
+    axes[-1].legend(handles, labels, loc='right')
 
     plt.suptitle('Regret of Multi-Threaded vs. Batched Clinch', y=1)
     plt.tight_layout()

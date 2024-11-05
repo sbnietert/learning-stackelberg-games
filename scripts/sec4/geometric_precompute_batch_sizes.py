@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 from security_games.clinch import BatchedClinchThenCommit
 from security_games.utils import RepeatedSSG, gen_non_myopic_with_bounded_lookahead_oracle, RepeatedSSGAlg, gen_simplex_SSG_2
@@ -82,7 +83,7 @@ if __name__ == "__main__":
     get_response = gen_non_myopic_with_bounded_lookahead_oracle(agent_lookahead, agent_cutoff)
     discount_factors = [0.5, 0.75, 0.85] # should be of length 3 for batch size selection to work
     # path to save precomputed batch sizes
-    batch_sizes_path = f'results/sec4/geometric_batch_sizes_T{T}.npy'
+    batch_sizes_path = f'results/sec4/geometric_batch_sizes_T{T}.pkl'
     ## END CONFIG
 
     ssgs = []
@@ -117,4 +118,4 @@ if __name__ == "__main__":
         batch_sizes_by_game[i] = [B1,B2,B3,B4,B5]
         print((i,batch_sizes_by_game[i]))
 
-    np.save(batch_sizes_path, batch_sizes_by_game)
+    with open(batch_sizes_path, 'wb') as f: pickle.dump(batch_sizes_by_game, f)

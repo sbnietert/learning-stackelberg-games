@@ -24,7 +24,7 @@ if __name__ == "__main__":
     figure_path = 'results/sec4/hyperbolic.pdf'
     ## END CONFIG
 
-    (mt_regret, st_regret, benchmark_payoffs, ssgs) = np.load(regret_path, allow_pickle=True).tolist()
+    (mt_regret, st_regret, benchmark_payoffs, ssgs) = np.load(regret_path, allow_pickle=True)
 
 
     y_lim_list = [50, 50, 50, 50, 50]

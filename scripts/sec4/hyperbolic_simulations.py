@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 from security_games.clinch import BatchedClinchThenCommit
 from security_games.utils import RepeatedSSG, gen_non_myopic_with_bounded_lookahead_oracle, gen_simplex_SSG_2
@@ -10,6 +11,7 @@ def run_simulations(
         batch_sizes,
         discount_factors,
         time_horizons,
+        get_response,
         W,
         verbose,
         null_payoffs,
@@ -94,12 +96,12 @@ if __name__ == "__main__":
     time_horizons = np.arange(20, 501, 20)
     agent_lookahead = 1 # only one non-myopic lookahead step needed for interesting behavior
     agent_cutoff = 999999 # controls how far simulations are run into the future, could be cut down to improve performance
-    get_response = gen_non_myopic_with_bounded_lookahead_oracle(agent_lookahead, agent_cutoff)
+    get_non_myopic_response = gen_non_myopic_with_bounded_lookahead_oracle(agent_lookahead, agent_cutoff)
     discount_factors = [0.5, 0.75, 0.85] # should be of length 3 for batch size selection to work
     batch_sizes = [1, 2, 4, 8, 12]  
     verbose = False
     # path to save regret
-    regret_path = 'results/sec4/hyperbolic_results_T500_B-1-2-4-8-12.npy'
+    regret_path = 'results/sec4/hyperbolic_results_T500_B-1-2-4-8-12.pkl'
     ## END CONFIG
 
 
@@ -114,6 +116,7 @@ if __name__ == "__main__":
         ssgs.append(ssg)
 
         game = RepeatedSSG(ssg, 0.5, discounting_type="hyperbolic")
+        # choice of discount factor insubstantial, not used below and will be overwritten
         games.append(game)
 
         get_response = lambda x,_: ssg.get_best_response(x)
@@ -127,6 +130,7 @@ if __name__ == "__main__":
                                     search_accuracy=benchmark_precision).run().search_result
 
         benchmark_solutions.append(sol)
+        assert sol is not None
         benchmark = ssg.get_leader_payoff(sol)
         benchmark_payoffs.append(benchmark)
 
@@ -138,6 +142,7 @@ if __name__ == "__main__":
         batch_sizes,
         discount_factors,
         time_horizons,
+        get_non_myopic_response,
         W,
         verbose,
         null_payoffs,
@@ -153,4 +158,4 @@ if __name__ == "__main__":
         time_horizons
     )
 
-    np.save(regret_path, (mt_regret, st_regret, benchmark_payoffs, ssgs))
+    with open(regret_path, 'wb') as f: pickle.dump((mt_regret, st_regret, benchmark_payoffs, ssgs), f)
