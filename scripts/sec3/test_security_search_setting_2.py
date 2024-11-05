@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     pool = multiprocessing.Pool(8)
     call_count_results = []
-    for i in range(5, 101, 5):
+    for i in np.rint(np.geomspace(5, 100, num=20)).astype(int):
         print(f"Testing n_targets={i}")
         for _ in range(3):
             call_count_result = pool.apply_async(test_security_search, args=(i,))
