@@ -1,0 +1,3 @@
+python scripts/sec4/geometric_precompute_batch_sizes.py
+python scripts/sec4/geometric_simulations.py
+python scripts/sec4/geometric_plots.py
