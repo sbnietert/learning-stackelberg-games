@@ -1,7 +1,7 @@
 {
     "prg_seed": 1234,
     "n_games": 5,
-    "n_targets": 5,
+    "n_targets": 3,
     "max_time_horizon": 500,
     "discounting_type": "hyperbolic",
     "discount_factors": [1, 2, 3],
