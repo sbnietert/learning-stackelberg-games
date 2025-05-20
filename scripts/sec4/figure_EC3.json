@@ -1,0 +1,10 @@
+{
+    "prg_seed": 1234,
+    "n_games": 5,
+    "n_targets": 5,
+    "max_time_horizon": 500,
+    "discounting_type": "hyperbolic",
+    "discount_factors": [1, 2, 3],
+    "batch_sizes": [1, 2, 4, 8, 12],
+    "plot_ylim": 50
+}

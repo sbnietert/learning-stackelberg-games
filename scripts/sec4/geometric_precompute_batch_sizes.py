@@ -12,7 +12,8 @@ def find_best_batch_size(game: RepeatedSSG,
                          min_size: int,
                          max_size: int,
                          num_divisions: int,
-                         branching_factor: int): # explore top branching_factor # divisions
+                         branching_factor: int, # explore top branching_factor # divisions
+                         verbose = False): 
     test_sizes = np.arange(min_size, max_size+1, np.maximum((max_size - min_size)//num_divisions,1))
     utilities = np.zeros(len(test_sizes))
     utilities_by_size = {}
@@ -61,7 +62,8 @@ def find_best_batch_size(game: RepeatedSSG,
         if utilities_by_size[size] > max_utility:
             max_utility = utilities_by_size[size]
             best_size = size
-
+    if verbose:
+        print(utilities_by_size)
     assert best_size > 0
     return (best_size, max_utility)
 
@@ -71,19 +73,19 @@ if __name__ == "__main__":
     # params for generating SSGs and benchmark solutions
     np.random.seed(1234)
     n_games = 5
-    n_targets = 3
+    n_targets = 10 # changed from 3
     v_low = 0.25
     v_high = 0.75
     W = v_low / (v_low + (n_targets - 1)*v_high)
     benchmark_precision = 1e-4
     # params for non-myopic simulations
-    T = 500 # time horizon
+    T = 1000 # time horizon, changed from 500
     agent_lookahead = 1 # only one non-myopic lookahead step needed for interesting behavior
     agent_cutoff = 999999 # controls how far simulations are run into the future, could be cut down to improve performance
     get_response = gen_non_myopic_with_bounded_lookahead_oracle(agent_lookahead, agent_cutoff)
-    discount_factors = [0.5, 0.75, 0.85] # should be of length 3 for batch size selection to work
+    discount_factors = [0.5, 0.92, 0.94] # should be of length 3 for batch size selection to work
     # path to save precomputed batch sizes
-    batch_sizes_path = f'results/sec4/geometric_batch_sizes_T{T}.pkl'
+    batch_sizes_path = f'results/sec4/geometric_batch_sizes_T{T}_n{n_targets}.pkl'
     ## END CONFIG
 
     ssgs = []
@@ -107,12 +109,13 @@ if __name__ == "__main__":
             print(f'B_star:{B_star}')
             B_star_table[(i,gamma)] = B_star
 
+    print(B_star_table)
     # use these to produces an informative set of batch sizes for each plot
     batch_sizes_by_game = {}
     for i in range(n_games):
-        B1 = B_star_table[(i,0.5)]
-        B2 = B_star_table[(i,0.75)]
-        B4 = B_star_table[(i,0.85)]
+        B1 = B_star_table[(i,discount_factors[0])]
+        B2 = B_star_table[(i,discount_factors[1])]
+        B4 = B_star_table[(i,discount_factors[2])]
         B3 = B2 + (B4 - B2)//2
         B5 = 2*B4 - B3
         batch_sizes_by_game[i] = [B1,B2,B3,B4,B5]

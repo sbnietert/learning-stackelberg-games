@@ -15,13 +15,8 @@ To run all the scripts and reproduce the figures for Section 3, run:
 bash run_sec3.sh
 ```
 
-To run all the scripts and reproduce the figures for Section 4 w/ geometric discounting, run:
+To run all the scripts and reproduce the figures for Section 4, run:
 ```
-bash run_sec4_geometric.sh
-```
-
-To run all the scripts and reproduce the figures for Section 4 w/ hyperbolic discounting, run:
-```
-bash run_sec4_hyperbolic.sh
+bash run_sec4.sh
 ```
 

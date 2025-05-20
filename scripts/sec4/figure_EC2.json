@@ -1,0 +1,16 @@
+{
+    "prg_seed": 1234,
+    "n_games": 5,
+    "n_targets": 10,
+    "max_time_horizon": 1000,
+    "discounting_type": "geometric",
+    "discount_factors": [0.5, 0.92, 0.94],
+    "batch_sizes_by_game": [
+        [1, 4, 6, 9, 12],
+        [1, 4, 6, 9, 12],
+        [1, 5, 7, 10, 13],
+        [1, 5, 7, 9, 11],
+        [1, 4, 7, 11, 15]
+    ],
+    "plot_ylim_by_game": [70, 65, 40, 120, 120]
+}
